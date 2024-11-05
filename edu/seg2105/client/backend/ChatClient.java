@@ -27,6 +27,9 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
+  private String currentcommand; 
+  private boolean connected;
+  private boolean loggedoff;
 
   
   //Constructors ****************************************************
@@ -69,17 +72,99 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromClientUI(String message)
   {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
+	  try
+	    {
+	      if (message.startsWith("#")){
+	        handleCommand(message);
+	      }
+	      
+	      if (connected){
+	        sendToServer(message);
+	      }
+	        
+	    }
+	    catch(IOException e)
+	    {
+	      clientUI.display
+	        ("Could not send message to server.  Terminating client.");
+	      quit();
+	    }
   }
+  
+  private void handleCommand (String command) {
+
+	    //we will split the message to allow us to get other messages from the user other than the command
+	    String[] messagegiven = command.split(" "); 
+
+
+	    currentcommand = messagegiven[0]; 
+	    
+	      if (messagegiven[0].equals("#quit")){
+	        quit();
+	      }
+	  
+	      else if (messagegiven[0].equals("#logoff")){
+	      
+	          
+	            try {
+	              closeConnection();
+	            } catch (IOException e) {
+	              // TODO Auto-generated catch block
+	              clientUI.display("Unknown error ");
+	            }
+	            
+	          
+	        
+	      }
+
+	      else if (messagegiven[0].equals("#sethost")){
+	        if (loggedoff){
+	          setHost(messagegiven[1]);
+	        }
+	        else{
+	          clientUI.display("You haven't logged off! Unable to sethost."); 
+	        }
+	      }
+
+	      else if (messagegiven[0].equals("#setport")){
+	        if (loggedoff){
+	          setPort(Integer.parseInt(messagegiven[1]));
+	        }
+	        else{
+	          clientUI.display("You haven't logged off! Unableto setport.");
+	        }
+	      }
+
+	      else if (messagegiven[0].equals("#login")){
+	        if (!isConnected()){
+	          try {
+	            openConnection();
+	          } catch (IOException e) {
+	            // TODO Auto-generated catch block
+	            clientUI.display("Unable to connect to server.");
+	          }
+	        }
+
+	        else{
+	          clientUI.display("You are already connected");
+	        }
+	      }
+
+	      //else if (command.equals("#gethost")){
+	        clientUI.display(getHost());
+	      //}
+
+	      //else if (command.equals("getport")){
+	        
+	        clientUI.display(String.valueOf(getPort())); 
+	      //}
+	  
+	    
+
+	    
+	     
+	    
+	  }
   
   /**
    * This method terminates the client.
@@ -104,7 +189,16 @@ public class ChatClient extends AbstractClient
   }
   
   protected void connectionClosed(){
-	  clientUI.display("connection is closed."); 
+	  if ("#quit".equals(currentcommand)){
+	      connected = false;
+	      clientUI.display("The server has shut down ");
+	      System.exit(0);
+	    }
+	    else if ("#logoff".equals(currentcommand)){
+	      connected = false; 
+	      loggedoff = true; 
+	      clientUI.display("Disconnected from server, program still running...");
+	    }
   }
   
 }
