@@ -87,6 +87,8 @@ public class EchoServer extends AbstractServer
       }
 
 
+    }else {
+    	sendToAllClients(client.getInfo("LoginID")+ " > " + msg);
     }
 
 
@@ -120,7 +122,7 @@ public class EchoServer extends AbstractServer
 
   @Override
   synchronized protected void clientDisconnected(ConnectionToClient client){
-    System.out.println("You are now disconnected.");
+    System.out.println(client.getInfo("LoginID")+ " is now disconnected.");
 
   }
   

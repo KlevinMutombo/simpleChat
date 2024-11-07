@@ -62,7 +62,7 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-    clientUI.display(loginId + "> "+ msg.toString());
+    clientUI.display(msg.toString());
     
     
   }
