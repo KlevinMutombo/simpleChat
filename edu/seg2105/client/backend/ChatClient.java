@@ -224,6 +224,7 @@ public class ChatClient extends AbstractClient
 
     try {
       sendToServer("#login " + loginId);
+      
     }
     catch (IOException e){
       clientUI.display("unknown error");

@@ -147,6 +147,8 @@ public class EchoServer extends AbstractServer
 	    	  }
 	    	  // also display in server
 	    	  serverUI.display(message);
+	    	  
+	    	  sendToAllClients("SERVER MSG> " + message);
 	      }
 	    }
 	    catch(IOException e)
