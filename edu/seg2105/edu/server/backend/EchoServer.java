@@ -67,7 +67,7 @@ public class EchoServer extends AbstractServer
       String[] earlymessage = message.split(" "); 
 
       if (client.getInfo("LoginID") == null){
-        client.setInfo("LoginID", msg); 
+        client.setInfo("LoginID", earlymessage[1] ); 
         serverUI.display(earlymessage[1] + " is now logged in");
       }
 
