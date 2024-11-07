@@ -57,22 +57,23 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
+	
     String message = (String) msg;
-    System.out.println("Message received: " + msg + " from " + client.getInfo("loginID"));
+    System.out.println("Message received: " + msg + " from " + client.getInfo("LoginID"));
     this.sendToAllClients(msg);
 
     if (message.startsWith("#login")){
       
-      String[] earlymessage = message.split(""); 
+      String[] earlymessage = message.split(" "); 
 
       if (client.getInfo("LoginID") == null){
-        client.setInfo("LoginID", earlymessage[1]); 
-        serverUI.display(msg + " is now logged in");
+        client.setInfo("LoginID", msg); 
+        serverUI.display(earlymessage[1] + " is now logged in");
       }
 
       else if (!client.isAlive()){
-        client.setInfo("LoginID", earlymessage[1]); 
-        serverUI.display(msg + " is now logged in");
+        client.setInfo("LoginID", msg); 
+        serverUI.display(msg + " has logged on");
       }
 
       else{
@@ -125,7 +126,7 @@ public class EchoServer extends AbstractServer
   
   synchronized protected void clientException(ConnectionToClient client, Throwable exception) {
 		
-		  System.out.println(client.getInfo("loginIDKey") + " has disconnected.");
+		  System.out.println(client.getInfo("LoginID") + " has disconnected.");
 	  }
   
 
