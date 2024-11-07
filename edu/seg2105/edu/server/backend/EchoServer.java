@@ -58,7 +58,7 @@ public class EchoServer extends AbstractServer
     (Object msg, ConnectionToClient client)
   {
     String message = (String) msg;
-    System.out.println("Message received: " + msg + " from " + client.getInfo("LoginID"));
+    System.out.println("Message received: " + msg + " from " + client.getInfo("loginID"));
     this.sendToAllClients(msg);
 
     if (message.startsWith("#login")){
@@ -67,12 +67,12 @@ public class EchoServer extends AbstractServer
 
       if (client.getInfo("LoginID") == null){
         client.setInfo("LoginID", earlymessage[1]); 
-        serverUI.display(earlymessage[1] + "is now logged in");
+        serverUI.display(msg + " is now logged in");
       }
 
       else if (!client.isAlive()){
         client.setInfo("LoginID", earlymessage[1]); 
-        serverUI.display(earlymessage[1] + "is now logged in");
+        serverUI.display(msg + " is now logged in");
       }
 
       else{
@@ -197,6 +197,7 @@ public class EchoServer extends AbstractServer
         	
         } catch (IOException e) {
           // TODO Auto-generated catch block
+        	e.printStackTrace();
           serverUI.display("Unknown error.");
           
         }
@@ -216,7 +217,10 @@ public class EchoServer extends AbstractServer
   }
 
 
-  
+  public static void main (String args[]) {
+	  System.out.print("Test");
+	  
+  }
     
     
     

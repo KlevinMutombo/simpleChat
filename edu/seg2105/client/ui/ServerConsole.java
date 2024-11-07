@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 
 
+
+
 import edu.seg2105.client.common.ChatIF;
 
 import edu.seg2105.edu.server.backend.EchoServer;
@@ -60,18 +62,27 @@ public class ServerConsole implements ChatIF {
 
     try
     {
-      port = Integer.parseInt(args[1]); //Get port from command line
+      port = Integer.parseInt(args[0]); //Get port from command line
     }
-    catch(ArrayIndexOutOfBoundsException e)
+    
+    catch(Throwable e)
     {
       port = DEFAULT_PORT; //Set port to 5555
     }
-	catch (NumberFormatException ne) 
-    {
-        port = DEFAULT_PORT;
-    }
-
+    
     ServerConsole sv = new ServerConsole(port);
+    
+	try 
+    {
+        sv.echoserver.listen();
+    }
+	
+	catch(Exception x){
+		x.printStackTrace();
+		System.out.println("Unknown Error.");
+	}
+
+    
     sv.accept();
 
   }
