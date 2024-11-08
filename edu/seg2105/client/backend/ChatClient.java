@@ -30,6 +30,7 @@ public class ChatClient extends AbstractClient
   private String currentcommand; 
   private boolean connected;
   private boolean loggedoff; 
+  private String lastMessage = "";
 
   String loginId;
   
@@ -62,7 +63,16 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-    clientUI.display(msg.toString());
+    //clientUI.display(msg.toString());
+    
+    String message = msg.toString();
+
+    // Check if the message is not a duplicate or if it's #login
+    if (message.contains(" > ") || message.contains("#") || 
+    		message.contains("SERVER")) {
+        clientUI.display(message);
+    }
+    
     
     
   }
