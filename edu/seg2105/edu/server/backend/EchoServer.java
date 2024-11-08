@@ -59,7 +59,7 @@ public class EchoServer extends AbstractServer
   {
 	
     String message = (String) msg;
-    System.out.println("Message received: " + msg + " from " + client.getInfo("LoginID"));
+    System.out.println("Message received: " + msg + " from " + client.getInfo("LoginID") + ".");
     this.sendToAllClients(msg);
 
     if (message.startsWith("#login")){
@@ -68,7 +68,7 @@ public class EchoServer extends AbstractServer
 
       if (client.getInfo("LoginID") == null){
         client.setInfo("LoginID", earlymessage[1] ); 
-        serverUI.display(earlymessage[1] + " is now logged in");
+        serverUI.display(earlymessage[1] + " has logged on.");
       }
 
       else if (!client.isAlive()){
@@ -116,13 +116,13 @@ public class EchoServer extends AbstractServer
 
   @Override
   protected void clientConnected(ConnectionToClient client){
-    System.out.println("Welcome, you are connected.");
+    System.out.println("A new client has connected to the server.");
 
   }
 
   @Override
   synchronized protected void clientDisconnected(ConnectionToClient client){
-    System.out.println(client.getInfo("LoginID")+ " is now disconnected.");
+    System.out.println(client.getInfo("LoginID")+ " has disconnected.");
 
   }
   

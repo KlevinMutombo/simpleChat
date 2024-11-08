@@ -67,7 +67,7 @@ public class ChatClient extends AbstractClient
     
     String message = msg.toString();
 
-    // Check if the message is not a duplicate or if it's #login
+    //we chech to see if message contains > or # or server to avoid printing duplicates
     if (message.contains(" > ") || message.contains("#") || 
     		message.contains("SERVER")) {
         clientUI.display(message);
@@ -108,13 +108,16 @@ public class ChatClient extends AbstractClient
     //we will split the message to allow us to get other messages from the user other than the command
     String[] messagegiven = command.split(" "); 
 
-
+    // This will be used to access the first argument of the command
     currentcommand = messagegiven[0]; 
     
+    //Disconnects and shuts down the server
       if (messagegiven[0].equals("#quit")){
         quit();
       }
-  
+      
+      
+      //Disconnects user from server but keeps program running
       else if (messagegiven[0].equals("#logoff")){
       
           
@@ -128,7 +131,8 @@ public class ChatClient extends AbstractClient
           
         
       }
-
+      
+      //Lets the user sethost, uses messagegivien[1] to get argument for host value
       else if (messagegiven[0].equals("#sethost")){
         if (loggedoff){
           setHost(messagegiven[1]);
@@ -137,7 +141,8 @@ public class ChatClient extends AbstractClient
           clientUI.display("You haven't logged off! Unable to sethost."); 
         }
       }
-
+      
+    //Lets the user setport, uses messagegivien[1] to get argument for host value if condition if they arent logged off
       else if (messagegiven[0].equals("#setport")){
         if (loggedoff){
           setPort(Integer.parseInt(messagegiven[1]));
@@ -147,6 +152,7 @@ public class ChatClient extends AbstractClient
         }
       }
 
+      //lets the user login if they are already connected gives error message
       else if (messagegiven[0].equals("#login")){
         if (!isConnected()){
           try {
@@ -162,10 +168,12 @@ public class ChatClient extends AbstractClient
         }
       }
 
+      //Displays value of host
       else if (command.equals("#gethost")){
         clientUI.display(getHost());
       }
 
+      //Displays value of port
       else if (command.equals("#getport")){
         
         clientUI.display(String.valueOf(getPort())); 
@@ -227,6 +235,7 @@ public class ChatClient extends AbstractClient
     
   }
 
+  //Server message when the user is connected 
   @Override
   protected void connectionEstablished(){
 
