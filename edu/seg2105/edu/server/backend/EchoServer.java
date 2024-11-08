@@ -60,8 +60,11 @@ public class EchoServer extends AbstractServer
 	
     String message = (String) msg;
     System.out.println("Message received: " + msg + " from " + client.getInfo("LoginID") + ".");
+    
+    // Send the received message to all clients
     this.sendToAllClients(msg);
 
+    // Check if the message is a login command
     if (message.startsWith("#login")){
       
       String[] earlymessage = message.split(" "); 
@@ -79,7 +82,7 @@ public class EchoServer extends AbstractServer
       else{
         try{
           client.sendToClient("You can only log in once.");
-          client.close();
+          client.close(); // Close the client connection if already logged in
         }
         catch (IOException e){
           serverUI.display("unknownerror");
@@ -88,6 +91,7 @@ public class EchoServer extends AbstractServer
 
 
     }else {
+    	// For non-login messages, display the client's LoginID and the message
     	sendToAllClients(client.getInfo("LoginID")+ " > " + msg);
     }
 
@@ -113,6 +117,12 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
+  
+  /**
+   * This method is called when a new client connects to the server.
+   * 
+   * @param client The new client that has connected.
+   */
 
   @Override
   protected void clientConnected(ConnectionToClient client){
@@ -120,11 +130,25 @@ public class EchoServer extends AbstractServer
 
   }
 
+  /**
+   * This method is called when a client disconnects from the server.
+   * 
+   * @param client The client that has disconnected.
+   */
+  
   @Override
   synchronized protected void clientDisconnected(ConnectionToClient client){
     System.out.println(client.getInfo("LoginID")+ " has disconnected.");
 
   }
+  
+  /**
+   * This method is called when a client disconnects unexpectedly or due to an exception.
+   * 
+   * @param client The client that has disconnected.
+   * @param exception The exception that caused the disconnection.
+   */
+  
   
   synchronized protected void clientException(ConnectionToClient client, Throwable exception) {
 		
@@ -132,6 +156,12 @@ public class EchoServer extends AbstractServer
 	  }
   
 
+  /**
+   * This method handles messages from the server UI.
+   * 
+   * @param message The message entered by the server administrator.
+   */
+  
   public void handleMessageFromServerUI(String message)
   {
 	  try
@@ -158,22 +188,30 @@ public class EchoServer extends AbstractServer
 	    }
     
   }
+  
+  /**
+   * Processes server commands.
+   * 
+   * @param command The command string entered by the server administrator.
+   */
 
   private void handleCommand(String command){
     
     String[] messagegiven = command.split(" "); 
 
     
-
+    //Quits server with #quit we quit the server
     if (messagegiven[0].equals("#quit")){
       serverUI.display("Quitting server...");
       System.exit(0);
     }
 
+    //Sever stop listening for clients
     else if (messagegiven[0].equals("#stop")){
       stopListening();
     }
 
+    //Server stops listening for clients and disconnects client
     else if (messagegiven[0].equals("#close")){
       serverUI.display("No longer listening for new clients, everyone will now be disconnected.");
       try {
@@ -185,16 +223,20 @@ public class EchoServer extends AbstractServer
       } 
     }
 
+    //Lets the user set a port 
     else if (messagegiven[0].equals("#setport")){
       if (closed){
         setPort(Integer.parseInt(messagegiven[1])); 
 
       }
+      
+      //Error message if user attempts to set port if server isn't closed.
       else{
         serverUI.display("Cannot set port if server is not closed.");
       }
     }
 
+    //Starts the server if it isn't listening yet.
     else if (messagegiven[0].equals("#start")){
       if (!isListening()){
         try {
@@ -223,7 +265,7 @@ public class EchoServer extends AbstractServer
 
 
   public static void main (String args[]) {
-	  System.out.print("Test");
+	  System.out.print("Server Starting");
 	  
   }
     
